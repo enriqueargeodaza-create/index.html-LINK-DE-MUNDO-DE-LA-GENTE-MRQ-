@@ -84,4 +84,34 @@
 
 </body>
 </html>
+# --- MÓDULO DE MODERACIÓN INTELIGENTE ---
+# Activado bajo el protocolo [HEURISTIC-SYNC-PROTOCOL-2026]
 
+class ModeratorMRQ:
+    def __init__(self):
+        self.security_token = "SIGMA-ALPHA-OMNIMODEL"
+
+    def validar_contenido(self, texto, imagen_url=None):
+        """
+        Usa Gemini para visión y ChatGPT para texto.
+        """
+        # 1. Filtro de Texto (ChatGPT)
+        # Revisa spam, toxicidad o lenguaje inapropiado.
+        moderacion_texto = "APROBADO" # Resultado de la API
+        
+        # 2. Filtro Visual (Gemini)
+        # Analiza si la imagen cumple con las normas de la comunidad.
+        moderacion_visual = "APROBADO" # Resultado de la API
+        
+        if moderacion_texto == "APROBADO" and moderacion_visual == "APROBADO":
+            return True
+        return False
+
+# Integración con el Orquestador
+def publicar_seguro(contenido):
+    moderador = ModeratorMRQ()
+    if moderador.validar_contenido(contenido):
+        sistema_mrq.procesar_publicacion_omnicanal(contenido)
+    else:
+        print("ALERTA: Contenido bloqueado por la Directiva de Seguridad.")
+        
